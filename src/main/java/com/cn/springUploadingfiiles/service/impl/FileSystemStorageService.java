@@ -1,5 +1,8 @@
 package com.cn.springUploadingfiiles.service.impl;
 
+import com.cn.springUploadingfiiles.config.StorageProperties;
+import com.cn.springUploadingfiiles.exception.StorageException;
+import com.cn.springUploadingfiiles.exception.StorageFileNotFoundException;
 import com.cn.springUploadingfiiles.service.StorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -39,7 +42,7 @@ public class FileSystemStorageService implements StorageService {
     public void store(MultipartFile file) {
         try{
             if(file.isEmpty()){
-                throw StorageException("Failed to store empty file");
+                throw new StorageException("Failed to store empty file");
             }
             Path destinationFile = this.rootLocation.resolve(Paths.get(file.getOriginalFilename()))
                     .normalize().toAbsolutePath();
@@ -52,7 +55,7 @@ public class FileSystemStorageService implements StorageService {
                         StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException e) {
-            throw new StorageException("Failed to store file.", e)
+            throw new StorageException("Failed to store file.", e);
         }
 
     }
@@ -62,7 +65,7 @@ public class FileSystemStorageService implements StorageService {
        try{
            return Files.walk(this.rootLocation,1)
                    .filter(path -> !path.equals(this.rootLocation))
-                   .map(this.rootLocation:: relativize)
+                   .map(this.rootLocation:: relativize);
        } catch (IOException e) {
            throw new StorageException("Failed to read store files, e");
        }
@@ -86,7 +89,7 @@ public class FileSystemStorageService implements StorageService {
         } catch(MalformedURLException e) {
             throw new StorageFileNotFoundException("Could not read file: " + filename);
         }
-        return null;
+
     }
 
     @Override

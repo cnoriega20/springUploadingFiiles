@@ -1,5 +1,6 @@
 package com.cn.springUploadingfiiles.controller;
 
+import com.cn.springUploadingfiiles.exception.StorageFileNotFoundException;
 import com.cn.springUploadingfiiles.service.StorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -49,7 +50,7 @@ public class FileUploadController {
         return  "redirect:/";
     }
 
-    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException  e){
+    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException e){
         return ResponseEntity.notFound().build();
     }
 }
